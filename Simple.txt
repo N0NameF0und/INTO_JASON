@@ -1,0 +1,40 @@
+Create database Auditoria;
+use Auditoria;
+
+CREATE TABLE `TablasAuditar` (
+  Id INT(20),
+  Nombre varchar(200)) ;
+
+CREATE TABLE `TipoAuditoria` (
+  Id INT(20) ,
+  Tipo varchar(200)   
+ );
+
+/*CREATE TABLE `PistaAuditoria` (
+  Id INT(20),
+  Usuario varchar(200)  
+  Fecha TimeStamp ,
+  IP varchar(200)
+  TipoCambio varchar(200)
+  );*/
+
+CREATE TABLE `PistaAuditoriaBajoNivel` (
+  Id INT(20), 
+  TablaOrigen varchar(200) ,
+  RegistroInicial text(20000),
+  RegistroFinal text(20000)
+);
+
+CREATE TABLE `PistaAuditoriaAltoNivel` (
+  Id INT(20) ,
+  DatosNegocios text(20000));
+
+CREATE TABLE `Estudiante` (
+  Id INT(20) ,
+  Nombre varchar(200),
+  Carrera varchar(200) ,
+  Curso varchar(200));
+
+
+
+

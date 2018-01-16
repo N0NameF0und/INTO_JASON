@@ -1,0 +1,144 @@
+invitacion 
+gestrella@yavirac.edu.ec
+
+
+-- FORMATO 1
+
+/*DELIMITER //
+
+CREATE TRIGGER `delete_user` AFTER DELETE ON `cms_users`
+ 
+FOR EACH ROW BEGIN 
+  
+DELETE FROM cms_users_relations WHERE id_user = cms_users_relations.id; 
+
+ END
+//
+DELIMITER ;
+
+*Desactivar Foreign Keys*
+SET foreign_key_checks = 0;
+SET foreign_key_checks = 1;  
+
+*/
+
+
+-- JASON MODELOS 1
+
+
+-- concat(select (old.Id) from estudiante,select (old.Nombre) from estudiante,
+ 
+-- select (old.Curso) from estudiante,select (old.Carrera) from estudiante);
+ 
+-- SET @V= JSON_OBJECT('Id',Id,'Nombre',Nombre,
+ 
+-- 'Curso',Curso,'Carrera',Carrera);
+ 
+-- GROUP_CONCAT("[{\"Id\":",Id,",\"Carrera\":",Carrera ,",\"Curso\":",Curso,"}]")from estudiante,"") 
+ 
+-- SET @V2 = CONCAT('[', GROUP_CONCAT(JSON_OBJECT('ID', Old.ID, 'Carrera',Old.Carrera,'Curso',Old.Curso)FROM estudiante),']');
+
+
+-- INGRESO POR foreign KEY
+ 
+/*
+ INSERT INTO TAB_STUDENT(name_student, id_teacher_fk)
+
+SELECT 'Joe The Student',
+ id_teacher
+  FROM TAB_TEACHER
+ WHERE name_teacher = 'Professor Jack'
+ 
+LIMIT 1*/
+ 
+-- BORRAR --
+
+/*
+DELIMITER //
+CREATE TRIGGER `Borrar_Estudiantes` 
+BEFORE DELETE ON `Estudiante`
+
+ FOR EACH ROW BEGIN 
+ 
+ 
+ SET @V1= concat("{Id:",(select old.Id from Estudiante limit 1),",",
+ "Nombre:",(select old.Nombre from Estudiante limit 1),",",
+ "Curso:",(select old.Curso from Estudiante limit 1),",",
+ "Carrera:",(select old.Id from Estudiante limit 1),"}");
+ 
+ -- "{\"Id\":",(select Id),",\"Carrera\":",Carrera ,",\"Curso\":",Curso,"}")from estudiante,""); 
+ -- "{'Id':Id,'Nombre':Nombre,'Curso':Curso,'Carrera':Carrera}";
+ 
+ 
+ INSERT INTO PistaAuditoria(Usuario,Fecha,Ip,TipoCambio)
+values (User(),Now(),@@port,"DELETE"); 
+
+SET @ID= (select last_insert_id()fromPistaAuditoria);
+  
+INSERT INTO PistaAuditoriaBajoNivel(Id,TablaOrigen,RegistroInicial,RegistroFinal)
+values
+(@ID,"Estudiante",@V,"null");
+ 
+END
+ //
+DELIMITER ;
+*/
+
+
+-- CREAR --
+
+DELIMITER //
+CREATE TRIGGER `Crear_Estudiantes` 
+AFTER INSERT ON `Estudiante`
+ FOR EACH ROW BEGIN 
+ 
+ SET @RegistroFinal= concat("{Id:",(select new.Id from Estudiante limit 1),",",
+ "Nombre:",(select new.Nombre from Estudiante limit 1),",",
+ "Curso:",(select new.Curso from Estudiante limit 1),",",
+ "Carrera:",(select new.Id from Estudiante limit 1),"}");
+ 
+ 
+ INSERT INTO PistaAuditoria(Usuario,Fecha,Ip,TipoCambio)
+values (User(),Now(),@@port,"INSERT"); 
+
+SET @ID= (select last_insert_id()fromPistaAuditoria);
+  
+INSERT INTO PistaAuditoriaBajoNivel(Id,TablaOrigen,RegistroInicial,RegistroFinal)
+values
+(@ID,"Estudiante","null",@RegistroFinal);
+ 
+END
+ //
+DELIMITER ;
+/*
+-- MODIFICAR --
+
+DELIMITER //
+CREATE TRIGGER `Cambio_Estudiantes` 
+BEFORE UPDATE ON `Estudiante`
+
+ FOR EACH ROW BEGIN 
+ SET @V1= concat("{Id:",(select old.Id from Estudiante limit 1),",",
+ "Nombre:",(select old.Nombre from Estudiante limit 1),",",
+ "Curso:",(select old.Curso from Estudiante limit 1),",",
+ "Carrera:",(select old.Id from Estudiante limit 1),"}");
+ SET @V2=concat("{Id:",(select new.Id from Estudiante limit 1),",",
+ "Nombre:",(select new.Nombre from Estudiante limit 1),",",
+ "Curso:",(select new.Curso from Estudiante limit 1),",",
+ "Carrera:",(select new.Id from Estudiante limit 1),"}");
+ 
+ 
+ INSERT INTO PistaAuditoria(Usuario,Fecha,Ip,TipoCambio)
+values (User(),Now(),@@port,"UPDATE"); 
+
+SET @ID= (select last_insert_id()fromPistaAuditoria);
+  
+INSERT INTO PistaAuditoriaBajoNivel(Id,TablaOrigen,RegistroInicial,RegistroFinal)
+values
+(@ID,"Estudiante",@V1,@V2);
+ 
+END
+ //
+DELIMITER ;
+*/
+

@@ -1,0 +1,107 @@
+Create database Auditoria;
+
+
+use Auditoria;
+
+
+
+CREATE TABLE `TablasAuditar` (
+ 
+ Id INT(20) NOT NULL auto_increment  ,
+
+Nombre varchar(200) not null collate utf8_spanish_ci,
+
+Auditar Bit not null default 0,
+  
+PRIMARY KEY (Id),
+  
+Unique I_Nombre (Nombre)
+)  collate utf8_unicode_ci,
+   
+Engine INNODB
+;
+
+
+
+CREATE TABLE `TipoAuditoria` (
+  
+Id INT(20) NOT NULL auto_increment  ,
+  
+Tipo varchar(200) not null collate utf8_spanish_ci,
+  
+Activar Bit not null default 0, 
+  
+PRIMARY KEY (Id)
+) collate utf8_unicode_ci,
+   
+Engine INNODB
+;
+
+CREATE TABLE `PistaAuditoria` (
+  
+Id INT(20) NOT NULL auto_increment  ,
+  
+Usuario varchar(200) not null collate utf8_spanish_ci,
+  
+Fecha TimeStamp not null ,
+  
+IP varchar(200) not null collate utf8_spanish_ci,
+  
+TipoCambio varchar(200) not null collate utf8_spanish_ci,
+  
+/*case sensitive*/
+   
+PRIMARY KEY (Id))
+   collate utf8_unicode_ci,
+   
+Engine INNODB;
+  
+  
+
+CREATE TABLE `PistaAuditoriaBajoNivel` (
+
+  Id INT(20) NOT NULL auto_increment , 
+  
+TablaOrigen varchar(200) not null collate utf8_spanish_ci,
+  
+RegistroInicial text(20000) not null collate utf8_spanish_ci,
+  
+RegistroFinal text(20000) not null collate utf8_spanish_ci,
+   
+PRIMARY KEY (Id),
+   
+FOREIGN KEY (Id) REFERENCES PistaAuditoria(Id) 
+ON DELETE CASCADE
+)collate utf8_unicode_ci,
+   
+Engine INNODB;
+
+
+
+CREATE TABLE `PistaAuditoriaAltoNivel` (
+  
+Id INT(20) NOT NULL ,
+  
+DatosNegocios text(20000) not null collate utf8_spanish_ci,
+  
+PRIMARY KEY (Id),
+  
+FOREIGN KEY (Id) REFERENCES PistaAuditoria(Id) ON DELETE CASCADE
+)collate utf8_unicode_ci,
+   
+Engine INNODB;
+
+
+
+
+CREATE TABLE `Estudiante` (
+  Id INT(20) NOT NULL auto_increment  ,
+  
+Nombre varchar(200) not null collate utf8_spanish_ci,
+  
+Carrera varchar(200) not null collate utf8_spanish_ci,
+  
+Curso varchar(200) not null collate utf8_spanish_ci,
+  
+PRIMARY KEY (Id)
+);
